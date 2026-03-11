@@ -113,3 +113,59 @@ Simplified the event browser so the top toolbar now presents a single clear prim
 2. Run future mobile polish checks on especially narrow widths before shipping UI changes.
 3. Choose the next substantive feature direction for the app now that the event-browser core is cleaner and more focused.
 4. When the next larger feature lands, append another structured summary here to keep the repo memory current.
+
+## Date/time
+2026-03-11 08:48:48 -04:00
+
+## Feature name, description, and value provided
+Mobile Browse-Priority Tightening + Dropdown Contrast Fix
+Description: Removed the top-of-page event summary signal strip on mobile so the event list appears sooner, and fixed native select option contrast by giving dropdown menu items an explicit dark background with light text.
+Value provided: Improves the mobile browse-first experience by reducing non-essential vertical clutter, makes the event list faster to reach, and resolves a readability bug that made dropdown options effectively invisible against a white native popup background.
+
+## Summary
+Refined the app’s mobile information hierarchy after reviewing the current production interaction model and deciding the event list should have stronger first-screen priority than ambient summary stats. The summary signal strip now remains available on desktop but is hidden at mobile widths, which tightens the scan path from header controls directly into the event list. Also fixed a form-control contrast bug where select dropdown options could render as white text on a white native menu surface, making inactive options unreadable unless hovered. After the CSS changes, a focused QA pass confirmed the mobile summary strip was removed, desktop retained the existing stats presentation, the app still rendered correctly on `localhost:4173`, and the changes were pushed to production.
+
+## Files changed
+- C:\Users\dougs\fun-wwe-app\styles\main.css
+- C:\Users\dougs\fun-wwe-app\PROJECT_MEMORY.md
+
+## Technical Architecture changes or key technical decisions made
+- Scoped the summary-strip removal to the mobile breakpoint only instead of deleting the component globally, preserving desktop information density while simplifying the mobile browse flow.
+- Fixed the select-option readability issue at the CSS layer by styling `.control option` directly rather than changing the form-control architecture.
+- Kept the implementation bounded to a small CSS-only production patch instead of introducing markup or JavaScript changes.
+- Validated the change with a lightweight regression pass that included server health, rendered mobile/desktop screenshots, and a targeted code inspection of the affected CSS rules.
+- Deployed the production change as a single focused commit on `main` to avoid bundling local QA artifacts or unrelated files.
+
+## Assumptions
+- On mobile, users care more about reaching and scanning the event list quickly than seeing summary metrics before the list.
+- The summary strip still adds enough value on desktop to keep it there for now.
+- Explicit option styling is sufficient for Chromium-based environments even though native select rendering can vary across browsers and operating systems.
+- A small CSS-only adjustment is the right scope for this phase rather than redesigning the mobile controls or information hierarchy more broadly.
+- The current production deployment path continues to be a direct push of `main` to the configured GitHub remote.
+
+## Known limitations
+- Native select dropdown rendering is still browser- and OS-dependent, so the contrast fix may not appear identically across all environments.
+- The mobile signal strip is hidden rather than redesigned, so those stats are not currently surfaced in a compact alternative mobile format.
+- No automated browser tests exist yet for the mobile hierarchy or form-control rendering changes.
+- The broader mobile detail experience still carries some desktop panel DNA and may need a future pass to feel more like a dedicated event page.
+- The app still depends on placeholder API configuration and fallback fetch paths for live data loading.
+
+## Key learnings that you can bring with you to future sessions
+- On mobile, removing low-value summary surfaces can improve product clarity more than trying to compress everything onto the first screen.
+- For this app, the event list is the primary content and should win vertical priority over supporting metrics.
+- Native form controls need explicit contrast consideration because browser defaults can conflict with dark UI themes in subtle but severe ways.
+- A small, surgical CSS patch can deliver meaningful product polish when the underlying interaction model is already mostly correct.
+- Running a quick rendered regression check after visual CSS changes is high-value even when the implementation is simple.
+
+## Remaining TODOs
+- Decide whether the hidden mobile summary stats should return later in a compact inline format near the list header.
+- Run a broader cross-browser spot check for native select control rendering, especially on Safari/iOS.
+- Continue refining the mobile event-detail experience so it feels more intentionally page-like rather than a stretched desktop panel.
+- Eventually split `src/main.js` into smaller modules as future features add complexity.
+- Replace placeholder API configuration and prototype fallback loading with a more production-ready setup.
+
+## Next steps
+1. Monitor the production mobile experience and confirm the tighter browse-first hierarchy continues to feel better during real use.
+2. If summary metrics are still desired on mobile, reintroduce them later as a single compact line near the event list header instead of a full card strip.
+3. Run an additional browser QA pass when the next mobile UI change ships, with special attention to native form controls and list-to-detail flow.
+4. Keep appending concise production-facing handoff notes here after each meaningful polish or feature release.
