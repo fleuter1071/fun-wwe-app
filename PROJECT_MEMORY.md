@@ -56,3 +56,60 @@ Reworked the top of the app so the experience now opens as a compact branded app
 2. Decide the next major product direction for the app: archive explorer, PLE browser, title-history tracker, or recap companion.
 3. Introduce a lightweight data-normalization layer before adding more event-specific features.
 4. When another meaningful feature ships, continue appending structured summaries here so the project memory stays useful as a running handoff log.
+
+## Date/time
+2026-03-10 21:50:30 -04:00
+
+## Feature name, description, and value provided
+Event Action Simplification + Mobile Detail Width Refinement
+Description: Removed remaining prototype-era random-action controls (`Surprise Me` and `Random event`), eliminated the redundant in-panel back button from the detail view, and refined the mobile detail layout so the content column and segmented tabs use the available screen width more effectively.
+Value provided: Clarifies the app’s core product purpose as a focused WWE event browser, reduces UI noise, removes redundant navigation/actions, and improves mobile readability and polish in the event detail experience.
+
+## Summary
+Simplified the event browser so the top toolbar now presents a single clear primary action (`Load Events`) instead of carrying an unnecessary secondary `Surprise Me` action. Removed the `Random event` control from the detail view and deleted the underlying random-selection logic, which makes the product feel more intentional and less like it still contains prototype-only affordances. Also removed the duplicate in-panel `Back to events` button so the sticky top-left back control is the only mobile navigation affordance. On the layout side, tightened the mobile detail spacing and control sizing so the `Announced Card / Results` segmented control no longer gets clipped and the detail screen uses narrow-device width more cleanly.
+
+## Files changed
+- C:\Users\dougs\fun-wwe-app\index.html
+- C:\Users\dougs\fun-wwe-app\src\main.js
+- C:\Users\dougs\fun-wwe-app\styles\main.css
+
+## Technical Architecture changes or key technical decisions made
+- Removed the last random-event UI hooks from both markup and `src/main.js` rather than leaving dead product logic in place.
+- Simplified the action model so the header has one primary CTA and the detail view has one mobile back affordance.
+- Tightened the mobile detail CSS by reducing spacing pressure and eliminating segmented-control minimum-width issues that caused clipping on narrow screens.
+- Preserved the existing browse-to-detail state model and mobile `openMobileDetail()` navigation pattern while reducing redundant controls around it.
+- Kept the cleanup scoped to the current static frontend architecture rather than expanding into broader refactors.
+
+## Assumptions
+- The app is stronger as a focused browsing and detail-view product than as a playground with random navigation shortcuts.
+- The sticky top-left back affordance is sufficient as the single mobile back pattern.
+- Reducing action count improves clarity more than keeping playful secondary controls.
+- The mobile detail screen should prioritize content width over preserving extra spacing that looks better on desktop.
+- The current users’ main job is to intentionally browse and inspect WWE events, not jump randomly between them.
+
+## Known limitations
+- The app still depends on placeholder API configuration and browser/CORS fallbacks for live loading.
+- The UI has been simplified, but `src/main.js` still remains a single-file controller and will become harder to maintain as features grow.
+- Mobile layout is substantially improved, but future passes may still be needed for especially long event names or other edge-case content lengths.
+- No automated mobile visual regression coverage exists yet for the detail screen.
+- The current design system is still evolving, so spacing and hierarchy may be tuned further as more features are added.
+
+## Key learnings that you can bring with you to future sessions
+- Removing low-value actions often improves perceived polish more than adding new features.
+- In a focused content browser, one clear primary action is stronger than multiple equal-weight buttons competing for attention.
+- Redundant navigation controls make mobile interfaces feel less confident and more prototype-like.
+- Narrow-screen UI issues are often caused by desktop-sized minimum widths and padding, not just overall container width.
+- Product clarity improves when every visible control supports the app’s real core task instead of legacy prototype experimentation.
+
+## Remaining TODOs
+- Add a small browser QA routine for narrow mobile widths after future layout changes.
+- Consider whether the sticky top-left back control should get slightly stronger visual affordance or remain this understated.
+- Eventually split rendering and interaction concerns out of `src/main.js` as the app grows.
+- Replace placeholder API configuration with a real configuration path.
+- Decide the next major product feature after the current event-browser polish phase.
+
+## Next steps
+1. Continue using the simplified action model as the standard: one primary header action and minimal detail-view controls.
+2. Run future mobile polish checks on especially narrow widths before shipping UI changes.
+3. Choose the next substantive feature direction for the app now that the event-browser core is cleaner and more focused.
+4. When the next larger feature lands, append another structured summary here to keep the repo memory current.
