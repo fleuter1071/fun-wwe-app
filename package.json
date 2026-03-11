@@ -1,0 +1,12 @@
+{
+  "name": "fun-wwe-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static WWE event explorer prototype",
+  "scripts": {
+    "start": "serve . -l 4173"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
