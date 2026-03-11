@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WWE Event Explorer</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="card hero-card">
+        <div class="eyebrow"><span class="dot"></span>WWE Event Explorer</div>
+        <h1>Browse WWE shows with cleaner paths from event list to event details</h1>
+        <p>
+          Explore the season, compare shows quickly, and open a focused event detail view with clearer sections for the
+          card, results, venue, media, and title-change moments.
+        </p>
+      </div>
+
+      <aside class="card controls-card">
+        <div class="controls-grid">
+          <select id="seasonSelect" class="control">
+            <option value="2026" selected>Season 2026</option>
+            <option value="2025">Season 2025</option>
+            <option value="2024">Season 2024</option>
+          </select>
+
+          <select id="statusFilter" class="control">
+            <option value="all">All statuses</option>
+            <option value="finished">Finished only</option>
+            <option value="upcoming">Upcoming / not started</option>
+          </select>
+
+          <input id="searchInput" class="control" type="text" placeholder="Search event, city, venue..." />
+
+          <select id="sortSelect" class="control">
+            <option value="newest" selected>Sort: Newest first</option>
+            <option value="oldest">Sort: Oldest first</option>
+            <option value="name">Sort: Name A-Z</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button id="loadBtn" class="btn btn-primary">Load Events</button>
+          <button id="surpriseBtn" class="btn">Surprise Me</button>
+        </div>
+
+        <div id="statusLine" class="status-line">Ready to load WWE events.</div>
+      </aside>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Visible Events</div>
+        <div id="visibleCount" class="stat-value">0</div>
+        <div class="stat-sub">Events matching your filters</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Finished</div>
+        <div id="finishedCount" class="stat-value">0</div>
+        <div class="stat-sub">Completed events in current view</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Upcoming</div>
+        <div id="upcomingCount" class="stat-value">0</div>
+        <div class="stat-sub">Not started yet</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Title Changes</div>
+        <div id="titleChangeCount" class="stat-value">0</div>
+        <div class="stat-sub">Detected in visible results</div>
+      </div>
+    </section>
+
+    <section id="shell" class="shell">
+      <div class="list-shell">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Events</div>
+            <div id="listSubtitle" class="section-subtitle">Browse the season and open a show</div>
+          </div>
+          <div id="listCount" class="section-subtitle">0 visible</div>
+        </div>
+        <div class="list-summary">Tap a card to open event details. On mobile, the event becomes its own detail screen.</div>
+        <div id="eventList" class="event-list"></div>
+      </div>
+
+      <div class="detail-shell">
+        <button id="mobileBackBtn" class="mobile-back">&larr; Back to events</button>
+        <div id="detailContent" class="detail-empty">
+          Select an event to see a more structured detail view with event snapshot, match card, results, and media.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="src/main.js"></script>
+</body>
+</html>
