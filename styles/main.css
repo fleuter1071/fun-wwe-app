@@ -178,6 +178,11 @@ button, input, select { font: inherit; }
 
 .control::placeholder { color: #7d8aa3; }
 
+.control option {
+  background: #152238;
+  color: var(--text);
+}
+
 .toolbar-bottom {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -735,6 +740,10 @@ button, input, select { font: inherit; }
 @media (max-width: 760px) {
   .app {
     padding: 12px;
+  }
+
+  .signal-strip {
+    display: none;
   }
 
   .app-header,
