@@ -6,7 +6,6 @@ const statusFilterEl = document.getElementById("statusFilter");
 const searchInputEl = document.getElementById("searchInput");
 const sortSelectEl = document.getElementById("sortSelect");
 const loadBtnEl = document.getElementById("loadBtn");
-const surpriseBtnEl = document.getElementById("surpriseBtn");
 const statusLineEl = document.getElementById("statusLine");
 const eventListEl = document.getElementById("eventList");
 const detailContentEl = document.getElementById("detailContent");
@@ -246,10 +245,6 @@ function renderDetail(event) {
         <h2>${safe(event.strEvent)}</h2>
         <small>${formatDate(event.dateEventLocal || event.dateEvent)} &bull; ${formatTime(event.strTimeLocal || event.strTime)}</small>
       </div>
-      <div class="detail-actions">
-        <button id="prevEventBtn" class="btn btn-small mobile-only">Back to events</button>
-        <button id="randomDetailBtn" class="btn btn-small">Random event</button>
-      </div>
     </div>
 
     <div class="detail-body">
@@ -331,12 +326,6 @@ function renderDetail(event) {
       renderDetail(event);
     });
   });
-
-  const randomDetailBtn = document.getElementById("randomDetailBtn");
-  if (randomDetailBtn) randomDetailBtn.addEventListener("click", selectRandomEvent);
-
-  const prevEventBtn = document.getElementById("prevEventBtn");
-  if (prevEventBtn) prevEventBtn.addEventListener("click", closeMobileDetail);
 }
 
 function openMobileDetail() {
@@ -451,19 +440,7 @@ async function loadEvents() {
   }
 }
 
-function selectRandomEvent() {
-  if (!filteredEvents.length) return;
-  const randomEvent = filteredEvents[Math.floor(Math.random() * filteredEvents.length)];
-  selectedEventId = randomEvent.idEvent;
-  currentPane = "card";
-  renderList(filteredEvents);
-  renderDetail(randomEvent);
-  setStatus(`Jumped to ${randomEvent.strEvent}.`);
-  openMobileDetail();
-}
-
 loadBtnEl.addEventListener("click", loadEvents);
-surpriseBtnEl.addEventListener("click", selectRandomEvent);
 searchInputEl.addEventListener("input", applyFilters);
 statusFilterEl.addEventListener("change", applyFilters);
 sortSelectEl.addEventListener("change", applyFilters);
@@ -474,4 +451,5 @@ window.addEventListener("resize", () => {
 });
 
 loadEvents();
+
 
