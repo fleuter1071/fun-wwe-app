@@ -24,7 +24,7 @@ Reworked the top of the app so the experience now opens as a compact branded app
 - Kept the implementation bounded to HTML/CSS/JS updates rather than expanding scope into framework migration or backend work.
 
 ## Assumptions
-- The app’s strongest current product shape is a focused event browser rather than a content-heavy landing page.
+- The appâ€™s strongest current product shape is a focused event browser rather than a content-heavy landing page.
 - Users benefit more from seeing more of the actual event list immediately than from a large explanatory hero section.
 - A local branded fallback image is preferable to broken artwork or generic placeholder treatment.
 - On mobile, preserving old scroll position when changing from list to detail is worse than explicitly resetting users to the top of the detail view.
@@ -63,7 +63,7 @@ Reworked the top of the app so the experience now opens as a compact branded app
 ## Feature name, description, and value provided
 Event Action Simplification + Mobile Detail Width Refinement
 Description: Removed remaining prototype-era random-action controls (`Surprise Me` and `Random event`), eliminated the redundant in-panel back button from the detail view, and refined the mobile detail layout so the content column and segmented tabs use the available screen width more effectively.
-Value provided: Clarifies the app’s core product purpose as a focused WWE event browser, reduces UI noise, removes redundant navigation/actions, and improves mobile readability and polish in the event detail experience.
+Value provided: Clarifies the appâ€™s core product purpose as a focused WWE event browser, reduces UI noise, removes redundant navigation/actions, and improves mobile readability and polish in the event detail experience.
 
 ## Summary
 Simplified the event browser so the top toolbar now presents a single clear primary action (`Load Events`) instead of carrying an unnecessary secondary `Surprise Me` action. Removed the `Random event` control from the detail view and deleted the underlying random-selection logic, which makes the product feel more intentional and less like it still contains prototype-only affordances. Also removed the duplicate in-panel `Back to events` button so the sticky top-left back control is the only mobile navigation affordance. On the layout side, tightened the mobile detail spacing and control sizing so the `Announced Card / Results` segmented control no longer gets clipped and the detail screen uses narrow-device width more cleanly.
@@ -85,7 +85,7 @@ Simplified the event browser so the top toolbar now presents a single clear prim
 - The sticky top-left back affordance is sufficient as the single mobile back pattern.
 - Reducing action count improves clarity more than keeping playful secondary controls.
 - The mobile detail screen should prioritize content width over preserving extra spacing that looks better on desktop.
-- The current users’ main job is to intentionally browse and inspect WWE events, not jump randomly between them.
+- The current usersâ€™ main job is to intentionally browse and inspect WWE events, not jump randomly between them.
 
 ## Known limitations
 - The app still depends on placeholder API configuration and browser/CORS fallbacks for live loading.
@@ -99,7 +99,7 @@ Simplified the event browser so the top toolbar now presents a single clear prim
 - In a focused content browser, one clear primary action is stronger than multiple equal-weight buttons competing for attention.
 - Redundant navigation controls make mobile interfaces feel less confident and more prototype-like.
 - Narrow-screen UI issues are often caused by desktop-sized minimum widths and padding, not just overall container width.
-- Product clarity improves when every visible control supports the app’s real core task instead of legacy prototype experimentation.
+- Product clarity improves when every visible control supports the appâ€™s real core task instead of legacy prototype experimentation.
 
 ## Remaining TODOs
 - Add a small browser QA routine for narrow mobile widths after future layout changes.
