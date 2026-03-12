@@ -234,55 +234,43 @@ function renderDetail(event) {
   const titleChanges = countTitleChanges(event.strResult);
   const matchCount = countBlocks(event.strDescriptionEN);
   const titleMatchCount = countTitleMatches(event.strDescriptionEN);
+  const dateTimeLine = `${formatDate(event.dateEventLocal || event.dateEvent)} &bull; ${formatTime(event.strTimeLocal || event.strTime)}`;
+  const locationLine = [event.strCity, event.strCountry].filter((value) => value && String(value).trim()).join(", ") || "--";
   const videoLink = event.strVideo
     ? `<a class="video-link" href="${event.strVideo}" target="_blank" rel="noopener noreferrer">Watch related video</a>`
     : "";
 
   detailContentEl.innerHTML = `
-    <div class="detail-top">
-      <div>
-        <div class="breadcrumb">Now Viewing</div>
-        <h2>${safe(event.strEvent)}</h2>
-        <small>${formatDate(event.dateEventLocal || event.dateEvent)} &bull; ${formatTime(event.strTimeLocal || event.strTime)}</small>
-      </div>
-    </div>
-
     <div class="detail-body">
-      <section class="hero-banner">
-        <img src="${getImage(event)}" alt="${safe(event.strEvent)}" onerror="handleEventImageError(this)" />
-        <div class="hero-overlay">
-          <div>
-            <h3>${safe(event.strEvent)}</h3>
-            <p>${safe(event.strVenue)} &bull; ${safe(event.strCity)}, ${safe(event.strCountry)}</p>
-          </div>
-          <div class="badge">${parseStatus(event.strStatus)}</div>
+      <section class="event-detail-header">
+        <div class="event-detail-identity">
+          <div class="event-detail-overline">Now Viewing</div>
+          <h1 class="event-detail-title">${safe(event.strEvent)}</h1>
+          <p class="event-detail-datetime">${dateTimeLine}</p>
+        </div>
+
+        <section class="event-detail-hero">
+          <img src="${getImage(event)}" alt="${safe(event.strEvent)}" onerror="handleEventImageError(this)" />
+          <span class="event-status-badge">${parseStatus(event.strStatus)}</span>
+        </section>
+
+        <div class="event-detail-location">
+          <div class="event-detail-venue">${safe(event.strVenue)}</div>
+          <div class="event-detail-place">${locationLine}</div>
+        </div>
+
+        <div class="event-detail-stats" aria-label="Event quick stats">
+          <span class="stat-chip">${matchCount} match${matchCount === 1 ? "" : "es"}</span>
+          <span class="stat-chip">${titleMatchCount} title match${titleMatchCount === 1 ? "" : "es"}</span>
+          <span class="stat-chip">${titleChanges} title change${titleChanges === 1 ? "" : "s"}</span>
         </div>
       </section>
 
-      <section class="snapshot-grid">
-        <div class="snapshot">
-          <div class="snapshot-label">Venue</div>
-          <div class="snapshot-value">${safe(event.strVenue)}</div>
-        </div>
-        <div class="snapshot">
-          <div class="snapshot-label">Location</div>
-          <div class="snapshot-value">${safe(event.strCity)}, ${safe(event.strCountry)}</div>
-        </div>
-        <div class="snapshot">
-          <div class="snapshot-label">Card Overview</div>
-          <div class="snapshot-value">${matchCount} matches &bull; ${titleMatchCount} title matches</div>
-        </div>
-        <div class="snapshot">
-          <div class="snapshot-label">Results Signal</div>
-          <div class="snapshot-value">${titleChanges} title change${titleChanges === 1 ? "" : "s"} detected</div>
-        </div>
-      </section>
-
-      <section class="block">
+      <section class="block block-primary">
         <div class="block-header">
           <div class="block-title-wrap">
             <h3>Match Information</h3>
-            <p>Move between the announced card and the finished results without leaving the event view.</p>
+            <p>Switch between the announced card and the finished results without leaving this event page.</p>
           </div>
 
           <div class="segmented" role="tablist" aria-label="Match information views">
