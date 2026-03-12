@@ -169,3 +169,61 @@ Refined the app’s mobile information hierarchy after reviewing the current pro
 2. If summary metrics are still desired on mobile, reintroduce them later as a single compact line near the event list header instead of a full card strip.
 3. Run an additional browser QA pass when the next mobile UI change ships, with special attention to native form controls and list-to-detail flow.
 4. Keep appending concise production-facing handoff notes here after each meaningful polish or feature release.
+
+## Date/time
+2026-03-12 18:33:43 -04:00
+
+## Feature name, description, and value provided
+Mobile Event Detail Unification + Scoped Back Navigation
+Description: Redesigned the selected-event detail intro on mobile so it reads like one composed event page header instead of a stack of equal-weight cards, added a small desktop-only polish pass so the shared markup still feels strong on large screens, and changed the mobile detail experience so the sticky `Back to events` control is scoped to a focused detail screen rather than the full page scroll context.
+Value provided: Makes the mobile event detail experience feel substantially more premium and intentional, reduces friction in long detail pages by keeping back navigation attached to the event screen, preserves desktop quality, and strengthens the product model of mobile browse screen -> mobile event screen.
+
+## Files changed
+- C:\Users\dougs\fun-wwe-app\src\main.js
+- C:\Users\dougs\fun-wwe-app\styles\main.css
+- C:\Users\dougs\fun-wwe-app\.gitignore
+- C:\Users\dougs\fun-wwe-app\PROJECT_MEMORY.md
+
+## Technical Architecture changes or key technical decisions made
+- Refactored the selected-event detail markup in `src/main.js` so the mobile intro now uses a unified event-header structure: identity, hero, attached status badge, lightweight location text, and compact stat chips before `Match Information`.
+- Removed the previous fragmented mobile intro pattern that depended on several equal-weight surfaces and replaced it with a clearer event-page hierarchy.
+- Preserved desktop IA while using shared markup plus responsive CSS so desktop could receive only light alignment/presence tuning rather than a full layout rewrite.
+- Introduced a `block-primary` hook to give `Match Information` a cleaner transition from the new unified header without redesigning the match content itself.
+- Changed mobile detail navigation so opening an event adds a `mobile-detail-open` body state and turns the detail shell into a fixed, scrollable screen on narrow widths.
+- Kept the sticky mobile back control inside that detail screen rather than duplicating navigation at the bottom, which prevents the back affordance from feeling contextually wrong near the top app header and filters.
+- Preserved existing derived stat logic, image fallback handling, and detail render flow while changing only the layout structure and mobile navigation context.
+- Validated the work with multiple screenshot-based regression passes plus manual browser verification of the mobile back behavior before pushing to production.
+
+## Assumptions
+- On mobile, users should experience an opened event as a dedicated screen rather than as part of the same long page scroll.
+- A single persistent back affordance is stronger and cleaner than duplicate top and bottom back controls for this product.
+- The hero image should remain the dominant visual anchor in the event detail intro, with metadata supporting it rather than competing with it.
+- Desktop users still benefit from the existing split browse/detail model and do not need the mobile simplification copied directly.
+- Small responsive CSS adjustments are preferable to larger architectural changes or framework migration at this stage.
+
+## Known limitations
+- The mobile detail screen now behaves more like an overlay/focused screen, but there is still no explicit route/state URL change to reflect that navigation model.
+- Cross-browser verification was strongest in Chrome-derived environments; additional Safari/iOS spot checks would still be useful.
+- The app still relies on placeholder API configuration and fallback loading paths for live data.
+- `src/main.js` remains a single-file controller, so future UI iterations will continue to increase maintenance pressure until rendering/state concerns are split out.
+- Automated browser tests are still absent, so long mobile-detail regressions still depend on manual or screenshot-based QA.
+
+## Key learnings that you can bring with you to future sessions
+- For long mobile detail pages, the better solution is often to scope navigation to the detail screen rather than duplicate the same back action at the bottom.
+- A mobile layout can feel dramatically more premium when the top of the page is treated as one composed story block instead of multiple equal-weight cards.
+- Shared markup across desktop and mobile can work well if the hierarchy is controlled responsively and desktop gets selective polish where the mobile solution slightly flattens it.
+- When evaluating sticky navigation on mobile, the key question is not just “is it visible?” but “is it visible in the right context?”
+- Real browser verification is especially important for navigation changes because headless checks can misrepresent interaction outcomes.
+
+## Remaining TODOs
+- Run a broader cross-browser spot check of the focused mobile detail screen, especially on Safari/iPhone.
+- Consider whether the mobile detail screen should eventually gain a slightly more explicit entrance/exit motion to reinforce the second-screen model.
+- Decide whether the event detail should eventually get route-based navigation or remain a stateful single-page view.
+- Split `src/main.js` into smaller render/state modules before the next larger feature wave.
+- Continue monitoring whether any compact mobile summary signals should return elsewhere in the browsing experience.
+
+## Next steps
+1. Watch the production mobile experience and confirm the focused detail-screen model continues to feel natural during everyday browsing.
+2. Run an additional real-device QA pass on iPhone/Safari and Android Chrome for the scoped sticky back behavior.
+3. Decide whether the next product pass should focus on richer event content, data normalization, or navigation/state architecture.
+4. Append another memory entry after the next meaningful product or UX milestone so the repo handoff history stays current.
