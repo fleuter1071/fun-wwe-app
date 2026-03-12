@@ -734,6 +734,10 @@ button, input, select { font: inherit; }
 }
 
 @media (max-width: 760px) {
+  body.mobile-detail-open {
+    overflow: hidden;
+  }
+
   .app {
     padding: 12px;
   }
@@ -870,8 +874,20 @@ button, input, select { font: inherit; }
     display: none;
   }
 
-  .detail-shell,
   .shell.mobile-detail-active .detail-shell {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    bottom: 12px;
+    z-index: 30;
+    min-height: 0;
+    height: auto;
+    overflow: auto;
+    box-shadow: var(--shadow-strong);
+  }
+
+  .detail-shell {
     min-height: calc(100vh - 24px);
   }
 
@@ -882,7 +898,7 @@ button, input, select { font: inherit; }
     position: sticky;
     top: 0;
     z-index: 4;
-    margin-left: 4px;
+    margin: 4px 0 4px 4px;
     margin-bottom: 4px;
     padding: 10px 12px;
     border-radius: 999px;

@@ -320,18 +320,18 @@ function openMobileDetail() {
   if (window.innerWidth > 760) return;
 
   shellEl.classList.add("mobile-detail-active");
+  document.body.classList.add("mobile-detail-open");
 
   requestAnimationFrame(() => {
     if (detailShellEl) detailShellEl.scrollTop = 0;
     if (detailContentEl) detailContentEl.scrollTop = 0;
-    window.scrollTo({ top: 0, behavior: "auto" });
-    if (mobileBackBtnEl) mobileBackBtnEl.scrollIntoView({ block: "start" });
   });
 }
 
 function closeMobileDetail() {
   shellEl.classList.remove("mobile-detail-active");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.body.classList.remove("mobile-detail-open");
+  shellEl.scrollIntoView({ block: "start", behavior: "smooth" });
 }
 
 function applyFilters() {
@@ -435,7 +435,10 @@ sortSelectEl.addEventListener("change", applyFilters);
 mobileBackBtnEl.addEventListener("click", closeMobileDetail);
 
 window.addEventListener("resize", () => {
-  if (window.innerWidth > 760) shellEl.classList.remove("mobile-detail-active");
+  if (window.innerWidth > 760) {
+    shellEl.classList.remove("mobile-detail-active");
+    document.body.classList.remove("mobile-detail-open");
+  }
 });
 
 loadEvents();
