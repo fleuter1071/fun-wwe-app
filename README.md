@@ -1,6 +1,6 @@
 # Fun WWE App
 
-A stylized single-page WWE event explorer prototype focused on browsing shows, filtering a season, and moving quickly from an event list into a structured detail view.
+A stylized WWE event explorer focused on browsing shows, filtering a season, and moving quickly from an event list into a structured detail view.
 
 ## Current MVP Shape
 
@@ -20,10 +20,10 @@ This starter app is intentionally lightweight:
 
 - plain HTML
 - plain CSS
-- plain JavaScript
+- modular JavaScript
 - no framework
 - no build step
-- local static dev server via `serve`
+- small Node server for static delivery plus API access
 
 ## Project Structure
 
@@ -31,28 +31,46 @@ This starter app is intentionally lightweight:
 fun-wwe-app/
   index.html
   package.json
+  server.js
+  scripts/
+    smoke-test.mjs
   styles/
     main.css
   src/
-    main.js
+    app.js
+    config.js
+    data/
+      client.js
+    render/
+      detail.js
+      dom.js
+      format.js
+      list.js
+      stats.js
+    shared/
+      events.js
+    state/
+      store.js
 ```
 
 ## File Responsibilities
 
 - `index.html`: app shell and DOM structure
 - `styles/main.css`: visual system, layout, responsive behavior
-- `src/main.js`: data loading, filtering, rendering, and UI interaction logic
-- `package.json`: local dev server script and dependency metadata
+- `src/app.js`: app orchestration and UI event wiring
+- `src/shared/events.js`: normalized event contract and shared event helpers
+- `server.js`: static file server and `/api/events` backend endpoint
+- `package.json`: run scripts and dependency metadata
 
 ## Data Source
 
-The prototype currently attempts to load WWE event data from TheSportsDB using a season-based endpoint.
+The app now loads season data through a local backend endpoint, which is responsible for upstream access and normalization.
 
 Notes:
 
-- the current file uses placeholder values for `API_KEY` and `LEAGUE_ID`
-- live loading may fail depending on API credentials and browser CORS behavior
-- when live loading fails, the app falls back to built-in sample data so the interface still works
+- the backend reads `UPSTREAM_API_KEY` and `UPSTREAM_LEAGUE_ID` from the environment
+- if live loading is not configured or upstream fails, the backend degrades to built-in sample data
+- the frontend only consumes normalized event payloads from `/api/events`
 
 ## Running Locally
 
@@ -62,33 +80,72 @@ Notes:
 npm install
 ```
 
+### Configure live upstream access
+
+Create a local `.env` file from `.env.example`, then set:
+
+```text
+UPSTREAM_API_KEY=...
+UPSTREAM_LEAGUE_ID=...
+```
+
+The server will read `.env` automatically on startup.
+
 ### Start the local server
 
 ```powershell
 npm start
 ```
 
-The app will be served at:
+The app and API will be served at:
 
 ```text
 http://localhost:4173
 ```
 
+### Run the smoke test
+
+```powershell
+npm run smoke
+```
+
+### Run the browser QA pass
+
+```powershell
+npm run qa:e2e
+```
+
+## Deploying To Render
+
+This app should be deployed as a Render `Web Service`, not a static site, because production needs the Node backend in `server.js` to serve `/api/events`.
+
+This repo now includes `render.yaml` for Blueprint-based setup.
+
+If deploying through the Render dashboard, use:
+
+- Build command: `npm install`
+- Start command: `npm start`
+
+Environment variables:
+
+- `UPSTREAM_API_KEY=123`
+- `UPSTREAM_LEAGUE_ID=4444`
+- `CACHE_TTL_MS=300000`
+
 ## Current Limitations
 
-- API configuration is still placeholder-level
-- event parsing is text-derived and not fully structured
-- all app logic is still in one JavaScript file
-- there is no test setup yet
-- there is no backend or persistence layer yet
+- live upstream credentials still need to be configured for real event loading
+- event-derived stats still come from text parsing, even though that logic is now centralized
+- there is no browser automation or full UI regression suite yet
+- the backend cache is in-memory only and resets on restart
 
 ## Recommended Next Steps
 
-1. Normalize event data into a small data layer.
-2. Split rendering into list/detail modules as the app grows.
-3. Decide the sharper product direction for the app: archive explorer, PLE browser, title-history tracker, or recap companion.
-4. Replace placeholder API settings with a real configuration path.
-5. Add lightweight QA coverage once the next feature wave lands.
+1. Configure real upstream credentials and confirm live season loading.
+2. Decide the sharper product direction for the app: archive explorer, PLE browser, title-history tracker, or recap companion.
+3. Add browser-level regression coverage for the list/detail and mobile back flow.
+4. Consider URL-backed selection state if event pages need to be linkable.
+5. Move beyond in-memory caching if this becomes a real deployed product.
 
 ## Product Direction
 

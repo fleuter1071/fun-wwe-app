@@ -1,2 +1,7 @@
 node_modules/
 PROJECT_BRIEF_LOCAL.md
+.env
+test-results/
+playwright-report/
+server-live-test.log
+server-live-test.err.log

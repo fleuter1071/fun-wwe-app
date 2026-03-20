@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: fun-wwe-app
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 24.13.1
+      - key: UPSTREAM_API_KEY
+        value: 123
+      - key: UPSTREAM_LEAGUE_ID
+        value: 4444
+      - key: CACHE_TTL_MS
+        value: 300000

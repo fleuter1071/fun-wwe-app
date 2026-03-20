@@ -2,11 +2,15 @@
   "name": "fun-wwe-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Static WWE event explorer prototype",
   "scripts": {
-    "start": "serve . -l 4173"
+    "start": "node server.js",
+    "smoke": "node scripts/smoke-test.mjs",
+    "qa:e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "serve": "^14.2.4"
   }
 }

@@ -227,3 +227,76 @@ Value provided: Makes the mobile event detail experience feel substantially more
 2. Run an additional real-device QA pass on iPhone/Safari and Android Chrome for the scoped sticky back behavior.
 3. Decide whether the next product pass should focus on richer event content, data normalization, or navigation/state architecture.
 4. Append another memory entry after the next meaningful product or UX milestone so the repo handoff history stays current.
+
+## Date/time
+2026-03-19 22:42:00 -04:00
+
+## Feature name, description, and value provided
+Architecture Foundation Refactor + Thin Backend Introduction
+Description: Replaced the single-file frontend controller with a modular frontend structure, introduced a shared normalized event contract, added a small Node server that serves both the static app and a normalized `/api/events` endpoint, and added a runtime smoke test plus runtime config hook.
+Value provided: Reduces architectural risk before the next feature wave, removes direct browser dependency on upstream/CORS fetch paths, establishes a clean frontend/backend boundary, keeps the existing product UX intact, and creates a safer base for future features and live-data hardening.
+
+## Summary
+Refactored the app so the browser no longer fetches WWE event data directly from TheSportsDB. The app now runs through a small Node server that serves static files, publishes `/app-config.js` for runtime configuration, and exposes `/api/events?season=...` as the single normalized data contract consumed by the frontend. On the frontend, the old `src/main.js` controller was split into modules for config, loading, rendering, state, and shared event logic. The event contract is now normalized centrally so list/detail rendering, fallback image handling, filtering, sorting, and derived event stats all operate on one internal shape instead of raw provider fields. A smoke test was also added to verify the app entry, runtime config script, and normalized API payload on a live local server.
+
+## Files changed
+- C:\Users\dougs\fun-wwe-app\index.html
+- C:\Users\dougs\fun-wwe-app\package.json
+- C:\Users\dougs\fun-wwe-app\README.md
+- C:\Users\dougs\fun-wwe-app\PROJECT_MEMORY.md
+- C:\Users\dougs\fun-wwe-app\server.js
+- C:\Users\dougs\fun-wwe-app\scripts\smoke-test.mjs
+- C:\Users\dougs\fun-wwe-app\src\app.js
+- C:\Users\dougs\fun-wwe-app\src\config.js
+- C:\Users\dougs\fun-wwe-app\src\data\client.js
+- C:\Users\dougs\fun-wwe-app\src\render\detail.js
+- C:\Users\dougs\fun-wwe-app\src\render\dom.js
+- C:\Users\dougs\fun-wwe-app\src\render\format.js
+- C:\Users\dougs\fun-wwe-app\src\render\list.js
+- C:\Users\dougs\fun-wwe-app\src\render\stats.js
+- C:\Users\dougs\fun-wwe-app\src\shared\events.js
+- C:\Users\dougs\fun-wwe-app\src\state\store.js
+- C:\Users\dougs\fun-wwe-app\src\main.js (removed)
+
+## Technical Architecture changes or key technical decisions made
+- Established a clean boundary where the frontend only consumes normalized events from `/api/events` and the backend owns upstream access plus normalization.
+- Introduced a shared `src/shared/events.js` module so event normalization, derived counts, fallback image resolution, and filtering/sorting logic are defined once.
+- Replaced the previous single-file `src/main.js` controller with smaller modules for app orchestration, state, config, data loading, and list/detail/stats rendering.
+- Added a runtime config hook through `/app-config.js` so API base configuration is no longer embedded directly in app logic.
+- Added a thin Node server instead of a framework or large backend platform to keep the architecture boring, lightweight, and easy to operate.
+- Added short-lived in-memory backend caching by season so repeat requests avoid unnecessary upstream calls during a session.
+- Kept sample data as an explicit degraded-mode fallback for now rather than deleting it before live upstream configuration is ready.
+
+## Assumptions
+- The app still benefits from staying lightweight and framework-free for this phase.
+- A thin backend is enough to remove the most important architectural risk without overbuilding.
+- Keeping the current UX stable during the refactor is more valuable than combining architecture work with new product features.
+- Demo-grade fallback is still acceptable temporarily as long as it is clearly treated as degraded mode, not the intended steady state.
+- Future feature work will benefit from a stable normalized event contract more than from direct provider-field access.
+
+## Known limitations
+- Real live event loading still depends on configuring valid `UPSTREAM_API_KEY` and `UPSTREAM_LEAGUE_ID` values.
+- The backend cache is memory-only and disappears on restart.
+- The smoke test verifies the live local integration contract but does not replace browser-level UI automation.
+- Detail rendering still injects upstream-derived text content into HTML blocks, so future hardening may want a stricter escaping/rendering approach.
+- The app still has no route-backed navigation model for selected events.
+
+## Key learnings that you can bring with you to future sessions
+- The highest-value architecture step was not a framework migration; it was creating a clean data contract and ownership boundary.
+- A thin backend provides most of the practical value needed here: stable API shape, centralized fallback handling, and removal of browser-side CORS dependency.
+- Shared pure event logic is useful when both the backend and frontend need to reason about the same event semantics.
+- Incremental refactoring with smoke checks kept the product surface stable while still landing a substantial architectural change.
+- This repo can absorb larger feature work more safely now that event loading, normalization, state, and rendering are separated.
+
+## Remaining TODOs
+- Configure real upstream credentials and validate live season loading through the new backend path.
+- Add browser-level regression coverage for the desktop list/detail flow and the mobile detail open/back flow.
+- Decide whether selected-event state should become URL-backed before the next larger navigation-oriented feature.
+- Consider persisting or externalizing backend cache if deployment and traffic expectations grow.
+- Continue hardening content rendering if upstream text becomes more varied or less trusted.
+
+## Next steps
+1. Configure valid upstream API settings and confirm the backend returns real season data instead of degraded sample fallback.
+2. Add at least one browser-driven regression pass for the mobile detail experience now that the architecture is stable enough to support it.
+3. Choose the next feature direction on top of the new contract and module boundaries rather than adding more structureless UI logic.
+4. Keep appending structured memory entries after future feature waves so the architecture history stays easy to reconstruct.
