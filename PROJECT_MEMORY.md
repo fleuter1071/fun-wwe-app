@@ -300,3 +300,72 @@ Refactored the app so the browser no longer fetches WWE event data directly from
 2. Add at least one browser-driven regression pass for the mobile detail experience now that the architecture is stable enough to support it.
 3. Choose the next feature direction on top of the new contract and module boundaries rather than adding more structureless UI logic.
 4. Keep appending structured memory entries after future feature waves so the architecture history stays easy to reconstruct.
+
+## Date/time
+2026-03-19 23:35:00 -04:00
+
+## Feature name, description, and value provided
+Production-Ready Live Data Activation + Browser QA + UX Trust/Hierarchy Refinement
+Description: Completed the post-architecture productization pass by wiring in real TheSportsDB free-tier live loading through local and Render configuration, adding browser-level regression coverage, introducing URL-backed selected-event and pane state, refining the desktop/mobile event UX to feel calmer and more product-like, and adding explicit UI messaging for live-data coverage limits so users understand the free-tier season window.
+Value provided: Turns the refactored app into a live deployable product instead of only a locally improved prototype, validates core user flows with browser automation, makes event detail shareable and refresh-stable, improves visual clarity on desktop and mobile, and removes a major trust gap by explicitly explaining why live season coverage stops at 15 events on the free API plan.
+
+## Files changed
+- C:\Users\dougs\fun-wwe-app\.env
+- C:\Users\dougs\fun-wwe-app\.env.example
+- C:\Users\dougs\fun-wwe-app\.gitignore
+- C:\Users\dougs\fun-wwe-app\README.md
+- C:\Users\dougs\fun-wwe-app\PROJECT_MEMORY.md
+- C:\Users\dougs\fun-wwe-app\package-lock.json
+- C:\Users\dougs\fun-wwe-app\package.json
+- C:\Users\dougs\fun-wwe-app\playwright.config.js
+- C:\Users\dougs\fun-wwe-app\render.yaml
+- C:\Users\dougs\fun-wwe-app\server.js
+- C:\Users\dougs\fun-wwe-app\index.html
+- C:\Users\dougs\fun-wwe-app\styles\main.css
+- C:\Users\dougs\fun-wwe-app\scripts\smoke-test.mjs
+- C:\Users\dougs\fun-wwe-app\src\app.js
+- C:\Users\dougs\fun-wwe-app\src\render\detail.js
+- C:\Users\dougs\fun-wwe-app\tests\live-app.spec.js
+
+## Technical Architecture changes or key technical decisions made
+- Added `.env` loading to `server.js` so live upstream configuration can be managed locally and in deployment environments without hardcoding credentials into app logic.
+- Confirmed that TheSportsDB free-tier values (`UPSTREAM_API_KEY=123`, `UPSTREAM_LEAGUE_ID=4444`) work as valid live configuration and removed the earlier placeholder guard that incorrectly treated them as non-live values.
+- Added browser-level regression coverage using Playwright instead of relying only on smoke/API checks, with separate desktop and mobile flows validated against the live app.
+- Introduced URL-backed selected-event and pane state in `src/app.js` using the hash, so opening an event and switching to `Results` now survive refresh and are shareable.
+- Added Render deployment support through `render.yaml` and verified the product deployment path as a Render Node web service instead of a static site.
+- Chose to make free-tier coverage limits explicit in the UI through a calm inline notice near the event list rather than hiding the limitation in troubleshooting text or leaving users to infer missing later-season events.
+- Continued improving the event-detail information architecture by restructuring the intro into a calmer editorial two-column desktop layout while preserving the mobile second-screen behavior.
+
+## Assumptions
+- Render remains the intended production hosting path for this phase of the app.
+- The free-tier TheSportsDB plan is acceptable for now even though it only returns 15 season events.
+- Users benefit more from understanding product/data constraints clearly than from trying to obscure them with softer wording.
+- URL-backed state is a worthwhile product upgrade even without full route-based navigation because it improves refresh behavior and sharing immediately.
+- Browser regression coverage for the main list/detail loop is enough for this phase even though there is still no broader visual or accessibility automation suite.
+
+## Known limitations
+- The app now uses real live data, but season coverage is still capped by the free TheSportsDB API limit of 15 events for the season endpoint.
+- The coverage notice explains the limit, but there is still no deeper in-product education or alternate fetch strategy for fuller season history on the free plan.
+- The backend cache is still in-memory only and does not persist across restarts or deploys.
+- The event URL state is hash-based rather than full route-based navigation.
+- Browser QA now covers the main desktop/mobile loop, but there is still no broader suite for filtering edge cases, cross-browser Safari behavior, or accessibility-specific checks.
+
+## Key learnings that you can bring with you to future sessions
+- Production trust problems often come less from visual polish and more from ambiguous system/data state; surfacing live vs. fallback vs. limited coverage clearly is high-value product work.
+- TheSportsDB free-tier season endpoint is live and usable, but it truncates season coverage to 15 events, which materially shapes the product experience and needs to be designed around.
+- URL-backed detail state delivers a meaningful product-quality jump without needing a full router or framework migration.
+- Once a modular architecture is in place, adding browser QA and deployment infrastructure becomes much easier and lower-risk.
+- Desktop detail views feel substantially more premium when they read as composed editorial surfaces rather than a stack of equal-weight cards.
+
+## Remaining TODOs
+- Decide whether to stay on the free TheSportsDB plan and design around the 15-event season window, or move to a premium plan / alternate data strategy for fuller coverage.
+- Add one more layer of production-facing QA, especially around filtering/sorting combinations and longer content edge cases from live data.
+- Consider a more explicit in-product explanation or tooltip for the free-tier live-data limit if users continue to be confused by season coverage.
+- Decide whether the next navigation step should be full route-based event detail or whether the current hash-based state is sufficient for the near term.
+- Continue refining the desktop detail experience and overall typographic system if the product moves further toward a premium editorial feel.
+
+## Next steps
+1. Monitor the live Render deployment and confirm the new data badge, coverage notice, and URL-backed event state behave correctly in production.
+2. Decide whether solving the 15-event live-data limit is the next product priority or whether the team can accept that constraint temporarily.
+3. If the free-tier limit becomes unacceptable, evaluate premium TheSportsDB access or a different data-source strategy before adding more season/archive features.
+4. Keep appending structured handoff notes here after each meaningful production, UX, or architecture milestone so future sessions can reconstruct both the product and its constraints quickly.
