@@ -13,7 +13,8 @@
         <div class="eyebrow"><span class="dot"></span>WWE Event Archive</div>
         <div class="brand-copy">
           <h1>WWE Event Explorer</h1>
-          <p>Browse full seasons, scan events fast, and drop into a cleaner detail view for cards, results, venue, and title-change moments.</p>
+          <p>Find a show fast, keep your place, and open a calmer event page for card, results, venue, and media context.</p>
+          <div id="dataBadge" class="data-badge" aria-live="polite">Waiting to load data</div>
         </div>
       </div>
 
@@ -52,20 +53,20 @@
       </div>
     </header>
 
-    <section class="signal-strip" aria-label="Event overview stats">
-      <div class="signal-card card">
-        <div class="signal-label">Visible</div>
+    <section class="signal-strip card" aria-label="Event overview stats">
+      <div class="signal-card">
+        <div class="signal-label">Visible now</div>
         <div id="visibleCount" class="signal-value">0</div>
       </div>
-      <div class="signal-card card">
+      <div class="signal-card">
         <div class="signal-label">Finished</div>
         <div id="finishedCount" class="signal-value">0</div>
       </div>
-      <div class="signal-card card">
+      <div class="signal-card">
         <div class="signal-label">Upcoming</div>
         <div id="upcomingCount" class="signal-value">0</div>
       </div>
-      <div class="signal-card card signal-card-accent">
+      <div class="signal-card signal-card-accent">
         <div class="signal-label">Title Changes</div>
         <div id="titleChangeCount" class="signal-value">0</div>
       </div>
@@ -80,7 +81,7 @@
           </div>
           <div id="listCount" class="section-count">0 visible</div>
         </div>
-        <div class="list-summary">Choose a show to open the full event view. On mobile, the detail panel becomes a focused second screen.</div>
+        <div class="list-summary">Choose a show to open the full event view. On mobile, event detail opens as a dedicated second screen.</div>
         <div id="eventList" class="event-list"></div>
       </div>
 

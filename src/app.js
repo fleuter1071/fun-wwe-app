@@ -12,6 +12,7 @@ const elements = {
   sortSelect: document.getElementById("sortSelect"),
   loadBtn: document.getElementById("loadBtn"),
   statusLine: document.getElementById("statusLine"),
+  dataBadge: document.getElementById("dataBadge"),
   eventList: document.getElementById("eventList"),
   detailContent: document.getElementById("detailContent"),
   shell: document.getElementById("shell"),
@@ -25,18 +26,29 @@ const elements = {
   listSubtitle: document.getElementById("listSubtitle")
 };
 
+function getUrlState() {
+  const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+  return {
+    selectedEventId: params.get("event") || null,
+    currentPane: params.get("pane") === "results" ? "results" : "card"
+  };
+}
+
 const initialFilters = {
   query: "",
   status: elements.statusFilter.value,
   sort: elements.sortSelect.value
 };
 
+const initialUrlState = getUrlState();
+
 const store = createStore({
   season: elements.seasonSelect.value,
   events: [],
   filters: initialFilters,
-  selectedEventId: null,
-  currentPane: "card",
+  selectedEventId: initialUrlState.selectedEventId,
+  currentPane: initialUrlState.currentPane,
   isMobileDetailOpen: false,
   statusMessage: "Ready to load WWE events.",
   dataMeta: {
@@ -45,6 +57,32 @@ const store = createStore({
     cached: false
   }
 });
+
+function syncUrlState(state) {
+  const params = new URLSearchParams();
+
+  if (state.selectedEventId) {
+    params.set("event", state.selectedEventId);
+  }
+
+  if (state.currentPane && state.currentPane !== "card") {
+    params.set("pane", state.currentPane);
+  }
+
+  const nextHash = params.toString();
+  const target = nextHash ? `#${nextHash}` : window.location.pathname + window.location.search;
+
+  if (nextHash) {
+    if (window.location.hash !== `#${nextHash}`) {
+      history.replaceState(null, "", `#${nextHash}`);
+    }
+    return;
+  }
+
+  if (window.location.hash) {
+    history.replaceState(null, "", target);
+  }
+}
 
 function getVisibleEvents(state = store.getState()) {
   return sortEvents(filterEvents(state.events, state.filters), state.filters.sort);
@@ -93,13 +131,38 @@ function closeMobileDetail() {
   elements.shell.scrollIntoView({ block: "start", behavior: "smooth" });
 }
 
+function getDataBadgeState(dataMeta) {
+  if (dataMeta.degraded) {
+    return {
+      label: "Sample fallback",
+      tone: "warning"
+    };
+  }
+
+  if (dataMeta.source === "live") {
+    return {
+      label: "Live data · free API window",
+      tone: "live"
+    };
+  }
+
+  return {
+    label: "Waiting to load data",
+    tone: "idle"
+  };
+}
+
 function renderApp(state) {
   const visibleEvents = getVisibleEvents(state);
   const selectedEvent = visibleEvents.find((event) => event.id === state.selectedEventId) || null;
+  const badgeState = getDataBadgeState(state.dataMeta);
 
   elements.statusLine.textContent = state.statusMessage;
+  elements.dataBadge.textContent = badgeState.label;
+  elements.dataBadge.dataset.tone = badgeState.tone;
   elements.shell.classList.toggle("mobile-detail-active", state.isMobileDetailOpen);
   document.body.classList.toggle("mobile-detail-open", state.isMobileDetailOpen);
+  syncUrlState(state);
 
   renderStats(elements, visibleEvents);
 
@@ -121,10 +184,13 @@ function renderApp(state) {
 
 async function loadEvents() {
   const season = elements.seasonSelect.value;
+  const urlState = getUrlState();
 
   store.setState((state) => ({
     ...state,
     season,
+    selectedEventId: urlState.selectedEventId,
+    currentPane: urlState.currentPane,
     statusMessage: `Loading WWE ${season} events...`
   }));
 
@@ -136,7 +202,8 @@ async function loadEvents() {
     ...reconcileSelection(state, {
       season,
       events: payload.events,
-      currentPane: "card",
+      selectedEventId: urlState.selectedEventId,
+      currentPane: urlState.currentPane,
       isMobileDetailOpen: false
     }),
     statusMessage: message,
@@ -184,6 +251,18 @@ window.addEventListener("resize", () => {
       isMobileDetailOpen: false
     }));
   }
+});
+
+window.addEventListener("hashchange", () => {
+  const urlState = getUrlState();
+
+  store.setState((state) => ({
+    ...state,
+    ...reconcileSelection(state, {
+      selectedEventId: urlState.selectedEventId,
+      currentPane: urlState.currentPane
+    })
+  }));
 });
 
 store.subscribe(renderApp);

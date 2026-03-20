@@ -17,6 +17,14 @@ test("desktop live flow loads events and switches detail panes", async ({ page }
   await page.getByRole("button", { name: "Results" }).click();
   await expect(page.locator('[data-pane-body="results"]')).toBeVisible();
   await expect(page.getByRole("button", { name: "Results" })).toHaveAttribute("aria-selected", "true");
+  await expect(page).toHaveURL(/event=/);
+  await expect(page).toHaveURL(/pane=results/);
+
+  await page.reload();
+
+  await expect(page.locator("#statusLine")).toContainText("Loaded", { timeout: 15_000 });
+  await expect(page.getByRole("button", { name: "Results" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".event-detail-title")).toBeVisible();
 });
 
 test("mobile live flow opens detail and returns to list", async ({ page }, testInfo) => {
@@ -32,6 +40,7 @@ test("mobile live flow opens detail and returns to list", async ({ page }, testI
   await expect(page.locator("#shell")).toHaveClass(/mobile-detail-active/);
   await expect(page.locator("#mobileBackBtn")).toBeVisible();
   await expect(page.locator(".event-detail-title")).toBeVisible();
+  await expect(page).toHaveURL(/event=/);
 
   await page.locator("#mobileBackBtn").click();
 
