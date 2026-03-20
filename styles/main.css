@@ -367,6 +367,23 @@ button, input, select { font: inherit; }
   line-height: 1.5;
 }
 
+.coverage-notice {
+  margin: 12px 18px 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(119, 183, 255, 0.08);
+  border: 1px solid rgba(119, 183, 255, 0.14);
+  color: #d8e9ff;
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+.coverage-notice[data-tone="warning"] {
+  background: rgba(255, 210, 93, 0.09);
+  border-color: rgba(255, 210, 93, 0.18);
+  color: #ffe9ad;
+}
+
 .event-list {
   padding: 10px;
   max-height: calc(100vh - 230px);
@@ -857,6 +874,11 @@ button, input, select { font: inherit; }
 
   .list-summary {
     padding: 10px 16px 0;
+  }
+
+  .coverage-notice {
+    margin: 10px 16px 0;
+    font-size: 0.8rem;
   }
 
   .event-card {

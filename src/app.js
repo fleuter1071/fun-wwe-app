@@ -18,6 +18,7 @@ const elements = {
   shell: document.getElementById("shell"),
   detailShell: document.querySelector(".detail-shell"),
   mobileBackBtn: document.getElementById("mobileBackBtn"),
+  coverageNotice: document.getElementById("coverageNotice"),
   visibleCount: document.getElementById("visibleCount"),
   finishedCount: document.getElementById("finishedCount"),
   upcomingCount: document.getElementById("upcomingCount"),
@@ -152,14 +153,42 @@ function getDataBadgeState(dataMeta) {
   };
 }
 
+function getCoverageNoticeState(state, visibleEvents) {
+  if (state.dataMeta.degraded) {
+    return {
+      visible: true,
+      tone: "warning",
+      message: "Showing sample fallback data because live loading was unavailable."
+    };
+  }
+
+  if (state.dataMeta.source === "live" && visibleEvents.length === 15) {
+    return {
+      visible: true,
+      tone: "info",
+      message: "Showing the first 15 live events available from the current API plan."
+    };
+  }
+
+  return {
+    visible: false,
+    tone: "info",
+    message: ""
+  };
+}
+
 function renderApp(state) {
   const visibleEvents = getVisibleEvents(state);
   const selectedEvent = visibleEvents.find((event) => event.id === state.selectedEventId) || null;
   const badgeState = getDataBadgeState(state.dataMeta);
+  const coverageState = getCoverageNoticeState(state, visibleEvents);
 
   elements.statusLine.textContent = state.statusMessage;
   elements.dataBadge.textContent = badgeState.label;
   elements.dataBadge.dataset.tone = badgeState.tone;
+  elements.coverageNotice.hidden = !coverageState.visible;
+  elements.coverageNotice.textContent = coverageState.message;
+  elements.coverageNotice.dataset.tone = coverageState.tone;
   elements.shell.classList.toggle("mobile-detail-active", state.isMobileDetailOpen);
   document.body.classList.toggle("mobile-detail-open", state.isMobileDetailOpen);
   syncUrlState(state);
